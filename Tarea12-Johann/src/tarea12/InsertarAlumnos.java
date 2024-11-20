@@ -33,12 +33,11 @@ public class InsertarAlumnos {
 			System.out.println("Introduzca el curso del alumno: ");
 			String curso = sc.nextLine();
 
-			System.out.println("Introduzca el grupo del alumno: ");
+			System.out.println("Introduzca el curso del alumno: ");
 			String grupo = sc.nextLine();
 
 			alumno[i] = new Alumnos(nia, nombre, apellidos, genero, nacimiento, ciclo, curso, grupo);
 		}
 		return alumno;
 	}
-
 }

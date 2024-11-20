@@ -2,10 +2,10 @@ package tarea12;
 
 import java.time.LocalDate;
 
-public class Alumnos{
+public class Alumnos {
 
 	private int nia;
-	private String nombre, apellidos,genero, ciclo, curso, grupo;
+	private String nombre, apellidos, genero, ciclo, curso, grupo;
 	private LocalDate nacimiento;
 
 	public Alumnos(int nia, String nombre, String apellidos, String genero, LocalDate nacimiento, String ciclo,
@@ -18,9 +18,6 @@ public class Alumnos{
 		this.ciclo = ciclo;
 		this.curso = curso;
 		this.grupo = grupo;
-	}
-
-	public Alumnos() {
 	}
 
 	public int getNia() {
@@ -47,6 +44,14 @@ public class Alumnos{
 		this.apellidos = apellidos;
 	}
 
+	public String getGenero() {
+		return genero;
+	}
+
+	public void setGenero(String genero) {
+		this.genero = genero;
+	}
+
 	public String getCiclo() {
 		return ciclo;
 	}
@@ -71,14 +76,6 @@ public class Alumnos{
 		this.grupo = grupo;
 	}
 
-	public String getGenero() {
-		return genero;
-	}
-
-	public void setGenero(String genero) {
-		this.genero = genero;
-	}
-
 	public LocalDate getNacimiento() {
 		return nacimiento;
 	}
@@ -89,7 +86,7 @@ public class Alumnos{
 
 	@Override
 	public String toString() {
-		return "Alumnos [nia=" + nia + ", nombre=" + nombre + ", apellidos=" + apellidos + ", ciclo=" + ciclo
-				+ ", curso=" + curso + ", grupo=" + grupo + ", genero=" + genero + ", nacimiento=" + nacimiento + "]";
+		return "Alumnos [nia=" + nia + ", nombre=" + nombre + ", apellidos=" + apellidos + ", genero=" + genero
+				+ ", ciclo=" + ciclo + ", curso=" + curso + ", grupo=" + grupo + ", nacimiento=" + nacimiento + "]";
 	}
 }

@@ -12,15 +12,16 @@ public class Menu {
 		do {
 			System.out.println("----------------------------------------------------------------");
 			System.out.println("1. Insertar nuevo alumno.");
-			System.out.println("2. Mostrar alumnos.");
-			System.out.println("3. Guardar alumnos en un fichero.");
-			System.out.println("4. Guardar en la BD los alumnos del fichero.");
-			System.out.println("5. Modificar nombre en la base de datos.");
-			System.out.println("6. Eliminar un alumno a partir de su PK.");
-			System.out.println("7. Eliminar un alumno a partir de su apellido.");
-			System.out.println("8. Guardar alumnos en fichero JSON.");
-			System.out.println("9. Guardar en la BD los alumnos del fichero JSON.");
-			System.out.println("10. Salir.");
+			System.out.println("2. Insertar nuevo grupo.");
+			System.out.println("3. Mostrar alumnos.");
+			System.out.println("4. Guardar alumnos en un fichero.");
+			System.out.println("5. Guardar en la BD los alumnos del fichero.");
+			System.out.println("6. Modificar nombre en la base de datos.");
+			System.out.println("7. Eliminar un alumno a partir de su PK.");
+			System.out.println("8. Eliminar los alumnos a partir de su curso.");
+			System.out.println("9. Guardar grupos en fichero JSON.");
+			System.out.println("10. Guardar en la BD los grupos del fichero JSON.");
+			System.out.println("11. Salir.");
 			System.out.println("----------------------------------------------------------------");
 			try {
 				num = sc.nextInt();
@@ -31,38 +32,42 @@ public class Menu {
 					break;
 
 				case 2:
-					abd.mostrarAlumnos();
+					abd.insertarGrupos();
 					break;
 
 				case 3:
-					f.guardarFicheroTexto();
+					abd.mostrarAlumnos();
 					break;
 
 				case 4:
-					f.leerFicheroTexto();
+					f.guardarFicheroTexto();
 					break;
 
 				case 5:
-					abd.modificarNombre();
+					f.leerFicheroTexto();
 					break;
 
 				case 6:
-					abd.eliminarPK();
+					abd.modificarNombre();
 					break;
 
 				case 7:
-					abd.eliminarApellido();
+					abd.eliminarPK();
 					break;
 
 				case 8:
-					f.guardarFicheroJSON();
+					abd.eliminarGrupos();
 					break;
 
 				case 9:
-					f.leerFicheroJSON();
+					f.guardarFicheroJSON();
 					break;
 
 				case 10:
+					f.leerFicheroJSON();
+					break;
+
+				case 11:
 					System.out.println("Programa terminado.");
 					break;
 
