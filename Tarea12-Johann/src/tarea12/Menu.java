@@ -78,6 +78,6 @@ public class Menu {
 				System.out.println(e.getMessage());
 				sc.nextLine();
 			}
-		} while (num != 10);
+		} while (num != 11);
 	}
 }

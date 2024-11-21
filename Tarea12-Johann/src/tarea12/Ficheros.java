@@ -32,7 +32,7 @@ public class Ficheros {
 
 			Connection conexion = DriverManager.getConnection(url, usuario, contrasenia);
 			Statement sentencia = conexion.createStatement();
-			sql = "select NIA, nombre, apellidos, genero, fechaNacimiento, ciclo, curso, grupo from alumno";
+			sql = "select NIA, nombre, apellidos, genero, fechaNacimiento, ciclo, curso, id_grupo from alumno";
 			ResultSet resultado = sentencia.executeQuery(sql);
 			BufferedWriter bw = new BufferedWriter(new FileWriter("alumnos.txt"));
 
@@ -45,10 +45,10 @@ public class Ficheros {
 				LocalDate nacimiento = fecha.toLocalDate();
 				String ciclo = resultado.getString(6);
 				String curso = resultado.getString(7);
-				int grupo = resultado.getInt(8);
+				int id_grupo = resultado.getInt(8);
 
 				bw.write(String.format("%d, %s, %s, %s, %s, %s, %s, %d, %n", nia, nombre, apellidos, genero, nacimiento,
-						ciclo, curso, grupo));
+						ciclo, curso, id_grupo));
 				bw.newLine();
 			}
 			System.out.println("Fichero alumnos.txt creado correctamente.");
@@ -68,39 +68,59 @@ public class Ficheros {
 	}
 
 	public void guardarFicheroJSON() {
-		// TODO
 
-		JSONArray listaAlumnos = new JSONArray();
+		String sqlAlumnos = "select NIA, nombre, apellidos, genero, fechaNacimiento, ciclo, curso, id_grupo from alumno where id_grupo = ?";
+		String sqlGrupos = "select cod_grupo, nombre, ciclo, aula from grupos";
 
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 
 			Connection conexion = DriverManager.getConnection(url, usuario, contrasenia);
-			Statement sentencia = conexion.createStatement();
-			sql = "select NIA, nombre, apellidos, genero, fechaNacimiento, ciclo, curso, grupo from alumno";
-			ResultSet resultado = sentencia.executeQuery(sql);
-			FileWriter fw = new FileWriter("grupos.json");
+			Statement sentenciaGrupos = conexion.createStatement();
+			PreparedStatement sentenciaAlumnos = conexion.prepareStatement(sqlAlumnos);
 
-			while (resultado.next()) {
-				JSONObject alumno = new JSONObject();
-				alumno.put("NIA", resultado.getInt("NIA"));
-				alumno.put("nombre", resultado.getString("nombre"));
-				alumno.put("apellidos", resultado.getString("apellidos"));
-				alumno.put("genero", resultado.getString("genero"));
-				alumno.put("nacimiento", resultado.getString("fechaNacimiento"));
-				alumno.put("ciclo", resultado.getString("ciclo"));
-				alumno.put("curso", resultado.getString("curso"));
-				alumno.put("grupo", resultado.getInt("grupo"));
+			ResultSet resultadoGrupos = sentenciaGrupos.executeQuery(sqlGrupos);
 
-				listaAlumnos.add(alumno);
+			JSONArray listaGrupos = new JSONArray();
+
+			while (resultadoGrupos.next()) {
+				JSONObject grupo = new JSONObject();
+				grupo.put("cod_grupo", resultadoGrupos.getInt("cod_grupo"));
+				grupo.put("nombre", resultadoGrupos.getString("nombre"));
+				grupo.put("ciclo", resultadoGrupos.getString("ciclo"));
+				grupo.put("aula", resultadoGrupos.getInt("aula"));
+
+				sentenciaAlumnos.setInt(1, resultadoGrupos.getInt("cod_grupo"));
+				ResultSet resultadoAlumno = sentenciaAlumnos.executeQuery();
+				JSONArray listaAlumnos = new JSONArray();
+
+				while (resultadoAlumno.next()) {
+					JSONObject alumno = new JSONObject();
+					alumno.put("NIA", resultadoAlumno.getInt("NIA"));
+					alumno.put("nombre", resultadoAlumno.getString("nombre"));
+					alumno.put("apellidos", resultadoAlumno.getString("apellidos"));
+					alumno.put("genero", resultadoAlumno.getString("fechaNacimiento"));
+					alumno.put("ciclo", resultadoAlumno.getString("ciclo"));
+					alumno.put("curso", resultadoAlumno.getString("curso"));
+					alumno.put("id_grupo", resultadoAlumno.getInt("id_grupo"));
+
+					listaAlumnos.add(alumno);
+				}
+
+				grupo.put("alumnos", listaAlumnos);
+
+				listaGrupos.add(grupo);
 			}
 
-			fw.write(listaAlumnos.toJSONString());
+			FileWriter fw = new FileWriter("grupos.json");
+
+			fw.write(listaGrupos.toJSONString());
 			System.out.println("Fichero grupos.json creado correctamente.");
 
 			fw.close();
-			resultado.close();
-			sentencia.close();
+			resultadoGrupos.close();
+			sentenciaAlumnos.close();
+			sentenciaGrupos.close();
 			conexion.close();
 
 		} catch (IOException e) {
@@ -115,7 +135,7 @@ public class Ficheros {
 
 	public void leerFicheroTexto() {
 
-		sql = "insert into alumno(NIA, nombre, apellidos, genero, fechaNacimiento, ciclo, curso, grupo) values(?,?,?,?,?,?,?,?)";
+		sql = "insert into alumno(NIA, nombre, apellidos, genero, fechaNacimiento, ciclo, curso, id_grupo) values(?,?,?,?,?,?,?,?)";
 
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -133,7 +153,7 @@ public class Ficheros {
 				String fechaNacimiento = alumnoData[4].trim();
 				String ciclo = alumnoData[5].trim();
 				String curso = alumnoData[6].trim();
-				int grupo = Integer.parseInt(alumnoData[7]);
+				int id_grupo = Integer.parseInt(alumnoData[7]);
 
 				Psentencia.setInt(1, nia);
 				Psentencia.setString(2, nombre);
@@ -142,7 +162,7 @@ public class Ficheros {
 				Psentencia.setDate(5, Date.valueOf(fechaNacimiento));
 				Psentencia.setString(6, ciclo);
 				Psentencia.setString(7, curso);
-				Psentencia.setInt(8, grupo);
+				Psentencia.setInt(8, id_grupo);
 
 				Psentencia.executeUpdate();
 			}
@@ -165,50 +185,69 @@ public class Ficheros {
 	}
 
 	public void leerFicheroJSON() {
-		// TODO
 
-		sql = "insert into alumno(NIA, nombre, apellidos, genero, fechaNacimiento, ciclo, curso, grupo) values(?,?,?,?,?,?,?,?)";
+		String sqlGrupos = "insert into grupos(cod_grupo, nombre, ciclo, aula) values(?,?,?,?)";
+		String sqlAlumnos = "insert into alumno(NIA, nombre, apellidos, genero, fechaNacimiento, ciclo, curso, id_grupo) values(?,?,?,?,?,?,?,?)";
 		JSONParser parser = new JSONParser();
 
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection conexion = DriverManager.getConnection(url, usuario, contrasenia);
 
-			PreparedStatement Psentencia = conexion.prepareStatement(sql);
+			PreparedStatement sentenciaAlumnos = conexion.prepareStatement(sqlAlumnos);
+			PreparedStatement sentenciaGrupo = conexion.prepareStatement(sqlGrupos);
 
 			FileReader fr = new FileReader("grupos.json");
 			Object obj = parser.parse(fr);
-			JSONArray listaAlumnos = (JSONArray) obj;
 
-			for (Object o : listaAlumnos) {
-				JSONObject alumnoJson = (JSONObject) o;
+			JSONArray listaGrupos = (JSONArray) obj;
 
-				int NIA = ((Long) alumnoJson.get("NIA")).intValue();
-				String nombre = (String) alumnoJson.get("nombre");
-				String apellidos = (String) alumnoJson.get("apellidos");
-				String genero = (String) alumnoJson.get("genero");
-				String nacimiento = (String) alumnoJson.get("nacimiento");
-				String ciclo = (String) alumnoJson.get("ciclo");
-				String curso = (String) alumnoJson.get("curso");
-				int grupo = ((Long) alumnoJson.get("grupo")).intValue();
+			for (Object o : listaGrupos) {
+				JSONObject grupoJSON = (JSONObject) o;
+				int cod_grupo = ((Long) grupoJSON.get("cod_grupo")).intValue();
+				String nombre = (String) grupoJSON.get("nombre");
+				String ciclo = (String) grupoJSON.get("ciclo");
+				int aula = ((Long) grupoJSON.get("aula")).intValue();
 
-				Psentencia.setInt(1, NIA);
-				Psentencia.setString(2, nombre);
-				Psentencia.setString(3, apellidos);
-				Psentencia.setString(4, genero);
-				Psentencia.setDate(5, Date.valueOf(nacimiento));
-				Psentencia.setString(6, ciclo);
-				Psentencia.setString(7, curso);
-				Psentencia.setInt(8, grupo);
+				sentenciaGrupo.setInt(1, cod_grupo);
+				sentenciaGrupo.setString(2, nombre);
+				sentenciaGrupo.setString(3, ciclo);
+				sentenciaGrupo.setInt(4, aula);
+				sentenciaGrupo.executeUpdate();
 
-				Psentencia.executeUpdate();
+				JSONArray listaAlumnos = (JSONArray) grupoJSON.get("alumnos");
+
+				for (Object a : listaAlumnos) {
+					JSONObject alumnoJson = (JSONObject) a;
+
+					int NIA = ((Long) alumnoJson.get("NIA")).intValue();
+					String nombreAlumno = (String) alumnoJson.get("nombre");
+					String apellidos = (String) alumnoJson.get("apellidos");
+					String genero = (String) alumnoJson.get("genero");
+					String nacimiento = (String) alumnoJson.get("nacimiento");
+					String cicloAl = (String) alumnoJson.get("ciclo");
+					String curso = (String) alumnoJson.get("curso");
+					int id_grupo = cod_grupo;
+
+					sentenciaAlumnos.setInt(1, NIA);
+					sentenciaAlumnos.setString(2, nombreAlumno);
+					sentenciaAlumnos.setString(3, apellidos);
+					sentenciaAlumnos.setString(4, genero);
+					sentenciaAlumnos.setDate(5, Date.valueOf(nacimiento));
+					sentenciaAlumnos.setString(6, cicloAl);
+					sentenciaAlumnos.setString(7, curso);
+					sentenciaAlumnos.setInt(8, id_grupo);
+
+					sentenciaAlumnos.addBatch();
+				}
 			}
 
 			System.out.println("Se inserto correctamente la informacion en la base de datos.");
 
-			Psentencia.close();
-			conexion.close();
+			sentenciaAlumnos.close();
+			sentenciaGrupo.close();
 			fr.close();
+			conexion.close();
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

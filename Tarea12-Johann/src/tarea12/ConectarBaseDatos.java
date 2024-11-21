@@ -15,34 +15,44 @@ public class ConectarBaseDatos {
 	private String usuario = "johann";
 	private String contrasenia = "manager";
 	Scanner sc = new Scanner(System.in);
-	InsertarAlumnos IA = new InsertarAlumnos();
 
 	public void insertarAlumnos() {
 
+		InsertarAlumnos IA = new InsertarAlumnos();
 		Alumnos[] alumno = IA.alumnos();
-		sql = "insert into alumno(NIA, nombre, apellidos, genero, fechaNacimiento, ciclo, curso, grupo) values(?,?,?,?,?,?,?,?)";
+		sql = "insert into alumno(NIA, nombre, apellidos, genero, fechaNacimiento, ciclo, curso, id_grupo) values(?,?,?,?,?,?,?,?)";
+		String sqlGrupo = "insert into grupos(cod_grupo, nombre, ciclo, aula) values(?,?,?,?)";
 
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection conexion = DriverManager.getConnection(url, usuario, contrasenia);
 
-			PreparedStatement Psentencia = conexion.prepareStatement(sql);
+			PreparedStatement sentenciaAlumnos = conexion.prepareStatement(sql);
+			PreparedStatement sentenciaGrupo = conexion.prepareStatement(sqlGrupo);
 
 			for (Alumnos Alumno : alumno) {
-				Psentencia.setInt(1, Alumno.getNia());
-				Psentencia.setString(2, Alumno.getNombre());
-				Psentencia.setString(3, Alumno.getApellidos());
-				Psentencia.setString(4, Alumno.getGenero());
-				Psentencia.setDate(5, Date.valueOf(Alumno.getNacimiento()));
-				Psentencia.setString(6, Alumno.getCiclo());
-				Psentencia.setString(7, Alumno.getCurso());
-				Psentencia.setInt(8, Alumno.getId_grupo());
 
-				Psentencia.executeUpdate();
+				sentenciaGrupo.setInt(1, Alumno.getId_grupo());
+				sentenciaGrupo.setString(2, Alumno.getCiclo());
+				sentenciaGrupo.setString(3, "Basica");
+				sentenciaGrupo.setInt(4, 123);
+
+				sentenciaGrupo.executeUpdate();
+
+				sentenciaAlumnos.setInt(1, Alumno.getNia());
+				sentenciaAlumnos.setString(2, Alumno.getNombre());
+				sentenciaAlumnos.setString(3, Alumno.getApellidos());
+				sentenciaAlumnos.setString(4, Alumno.getGenero());
+				sentenciaAlumnos.setDate(5, Date.valueOf(Alumno.getNacimiento()));
+				sentenciaAlumnos.setString(6, Alumno.getCiclo());
+				sentenciaAlumnos.setString(7, Alumno.getCurso());
+				sentenciaAlumnos.setInt(8, Alumno.getId_grupo());
+
+				sentenciaAlumnos.executeUpdate();
 			}
 			System.out.println("Se ha guardado correctamente al alumno.");
 
-			Psentencia.close();
+			sentenciaAlumnos.close();
 			conexion.close();
 
 		} catch (SQLException e) {
@@ -54,8 +64,8 @@ public class ConectarBaseDatos {
 
 	public void mostrarAlumnos() {
 
-		sql = "select A.NIA, A.nombre, A.apellidos, A.genero, A.fechaNacimiento, A.ciclo, A.curso, A.id_grupo, G.nombre, G.aula"
-				+ "from alumno A Inner Join grupos G on A.id_grupo = G.cod_grupo";
+		sql = "SELECT A.NIA, A.nombre, A.apellidos, A.genero, A.fechaNacimiento, A.ciclo, A.curso, A.id_grupo, G.nombre, G.aula"
+				+ " FROM alumno A INNER JOIN grupos G ON A.id_grupo = G.cod_grupo";
 
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -64,10 +74,10 @@ public class ConectarBaseDatos {
 
 			ResultSet resultado = sentencia.executeQuery(sql);
 			while (resultado.next()) {
-				System.out.printf("%d, %s, %s, %s, %s, %s, %s, %d, %s,%d %n", resultado.getInt(1),
+				System.out.printf("%d, %s, %s, %s, %s, %s, %s, %d, %s, %s, %n", resultado.getInt(1),
 						resultado.getString(2), resultado.getString(3), resultado.getString(4), resultado.getDate(5),
 						resultado.getString(6), resultado.getString(7), resultado.getInt(8), resultado.getString(9),
-						resultado.getInt(10));
+						resultado.getString(10));
 			}
 			resultado.close();
 			sentencia.close();
@@ -193,8 +203,9 @@ public class ConectarBaseDatos {
 
 	public void insertarGrupos() {
 
-		Grupos[] grupo = new Grupos[1];
-		sql = "insert into grupos(id_grupo, nombre, ciclo, aula) values(?,?,?,?)";
+		InsertarGrupos IG = new InsertarGrupos();
+		Grupos[] grupo = IG.Grupos();
+		sql = "insert into grupos(cod_grupo, nombre, ciclo, aula) values(?,?,?,?)";
 
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -211,7 +222,9 @@ public class ConectarBaseDatos {
 				Psentencia.executeUpdate();
 			}
 
-			Psentencia.executeUpdate();
+			Psentencia.close();
+			conexion.close();
+
 		} catch (SQLException | ClassNotFoundException e) {
 			System.out.println(e.getMessage());
 		}
