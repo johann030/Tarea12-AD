@@ -238,7 +238,7 @@ public class Ficheros {
 					sentenciaAlumnos.setString(7, curso);
 					sentenciaAlumnos.setInt(8, id_grupo);
 
-					sentenciaAlumnos.addBatch();
+					sentenciaAlumnos.executeUpdate();
 				}
 			}
 
