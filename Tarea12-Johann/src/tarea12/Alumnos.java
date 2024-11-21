@@ -4,12 +4,12 @@ import java.time.LocalDate;
 
 public class Alumnos {
 
-	private int nia;
-	private String nombre, apellidos, genero, ciclo, curso, grupo;
+	private int nia, id_grupo;
+	private String nombre, apellidos, genero, ciclo, curso;
 	private LocalDate nacimiento;
 
 	public Alumnos(int nia, String nombre, String apellidos, String genero, LocalDate nacimiento, String ciclo,
-			String curso, String grupo) {
+			String curso, int id_grupo) {
 		this.nia = nia;
 		this.nombre = nombre;
 		this.apellidos = apellidos;
@@ -17,7 +17,7 @@ public class Alumnos {
 		this.nacimiento = nacimiento;
 		this.ciclo = ciclo;
 		this.curso = curso;
-		this.grupo = grupo;
+		this.id_grupo = id_grupo;
 	}
 
 	public int getNia() {
@@ -26,6 +26,14 @@ public class Alumnos {
 
 	public void setNia(int nia) {
 		this.nia = nia;
+	}
+
+	public int getId_grupo() {
+		return id_grupo;
+	}
+
+	public void setId_grupo(int id_grupo) {
+		this.id_grupo = id_grupo;
 	}
 
 	public String getNombre() {
@@ -68,14 +76,6 @@ public class Alumnos {
 		this.curso = curso;
 	}
 
-	public String getGrupo() {
-		return grupo;
-	}
-
-	public void setGrupo(String grupo) {
-		this.grupo = grupo;
-	}
-
 	public LocalDate getNacimiento() {
 		return nacimiento;
 	}
@@ -86,7 +86,7 @@ public class Alumnos {
 
 	@Override
 	public String toString() {
-		return "Alumnos [nia=" + nia + ", nombre=" + nombre + ", apellidos=" + apellidos + ", genero=" + genero
-				+ ", ciclo=" + ciclo + ", curso=" + curso + ", grupo=" + grupo + ", nacimiento=" + nacimiento + "]";
+		return "Alumnos [nia=" + nia + ", id_grupo=" + id_grupo + ", nombre=" + nombre + ", apellidos=" + apellidos
+				+ ", genero=" + genero + ", ciclo=" + ciclo + ", curso=" + curso + ", nacimiento=" + nacimiento + "]";
 	}
 }

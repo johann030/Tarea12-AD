@@ -16,10 +16,10 @@ public class ConectarBaseDatos {
 	private String contrasenia = "manager";
 	Scanner sc = new Scanner(System.in);
 	InsertarAlumnos IA = new InsertarAlumnos();
-	Alumnos[] alumno = IA.alumnos();
 
 	public void insertarAlumnos() {
 
+		Alumnos[] alumno = IA.alumnos();
 		sql = "insert into alumno(NIA, nombre, apellidos, genero, fechaNacimiento, ciclo, curso, grupo) values(?,?,?,?,?,?,?,?)";
 
 		try {
@@ -36,7 +36,7 @@ public class ConectarBaseDatos {
 				Psentencia.setDate(5, Date.valueOf(Alumno.getNacimiento()));
 				Psentencia.setString(6, Alumno.getCiclo());
 				Psentencia.setString(7, Alumno.getCurso());
-				Psentencia.setObject(8, Alumno.getGrupo());
+				Psentencia.setInt(8, Alumno.getId_grupo());
 
 				Psentencia.executeUpdate();
 			}
@@ -53,16 +53,21 @@ public class ConectarBaseDatos {
 	}
 
 	public void mostrarAlumnos() {
+
+		sql = "select A.NIA, A.nombre, A.apellidos, A.genero, A.fechaNacimiento, A.ciclo, A.curso, A.id_grupo, G.nombre, G.aula"
+				+ "from alumno A Inner Join grupos G on A.id_grupo = G.cod_grupo";
+
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection conexion = DriverManager.getConnection(url, usuario, contrasenia);
 			Statement sentencia = conexion.createStatement();
-			sql = "select NIA, nombre, apellidos, genero, fechaNacimiento, ciclo, curso, id_grupo from alumno";
+
 			ResultSet resultado = sentencia.executeQuery(sql);
 			while (resultado.next()) {
-				System.out.printf("%d, %s, %s, %s, %s, %s, %s, %s %n", resultado.getInt(1), resultado.getString(2),
-						resultado.getString(3), resultado.getString(4), resultado.getDate(5), resultado.getString(6),
-						resultado.getString(7), resultado.getString(8));
+				System.out.printf("%d, %s, %s, %s, %s, %s, %s, %d, %s,%d %n", resultado.getInt(1),
+						resultado.getString(2), resultado.getString(3), resultado.getString(4), resultado.getDate(5),
+						resultado.getString(6), resultado.getString(7), resultado.getInt(8), resultado.getString(9),
+						resultado.getInt(10));
 			}
 			resultado.close();
 			sentencia.close();
@@ -76,6 +81,7 @@ public class ConectarBaseDatos {
 	}
 
 	public void modificarNombre() {
+
 		sql = "update alumno set nombre = ? where NIA = ?";
 
 		try {
@@ -110,6 +116,7 @@ public class ConectarBaseDatos {
 	}
 
 	public void eliminarPK() {
+
 		sql = "delete from alumno where NIA = ?";
 
 		try {
@@ -142,12 +149,53 @@ public class ConectarBaseDatos {
 
 	public void eliminarGrupos() {
 
+		sql = "delete from alumno where id_grupo = ?";
+		String sql2 = "select cod_grupo, nombre from grupos";
+
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection conexion = DriverManager.getConnection(url, usuario, contrasenia);
+
+			Statement sentencia = conexion.createStatement();
+
+			ResultSet resultado = sentencia.executeQuery(sql2);
+			System.out.printf("%d, %s %n", "Codigo_Grupo", "Nombre");
+
+			while (resultado.next()) {
+				System.out.printf("%d, %s %n", resultado.getInt(1), resultado.getString(2));
+			}
+
+			System.out.println("Digame la grupo para eliminar a sus alumnos: ");
+			int grupo = sc.nextInt();
+			sc.nextLine();
+
+			PreparedStatement Psentencia = conexion.prepareStatement(sql);
+			Psentencia.setInt(1, grupo);
+			int filas = Psentencia.executeUpdate();
+
+			if (filas > 0) {
+				System.out.println("Los alumnos que pertenecen al grupo " + grupo + " se borraron correctamente");
+			} else {
+				System.out.println("No se encontro ese grupo.");
+			}
+
+			Psentencia.close();
+			resultado.close();
+			sentencia.close();
+			conexion.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void insertarGrupos() {
 
 		Grupos[] grupo = new Grupos[1];
 		sql = "insert into grupos(id_grupo, nombre, ciclo, aula) values(?,?,?,?)";
+
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection conexion = DriverManager.getConnection(url, usuario, contrasenia);
@@ -155,10 +203,10 @@ public class ConectarBaseDatos {
 			PreparedStatement Psentencia = conexion.prepareStatement(sql);
 
 			for (Grupos grupos : grupo) {
-				Psentencia.setObject(1, grupos.getCod_grupo());
-				Psentencia.setObject(2, grupos.getNombre());
-				Psentencia.setObject(3, grupos.getCiclo());
-				Psentencia.setObject(4, grupos.getAula());
+				Psentencia.setInt(1, grupos.getCod_grupo());
+				Psentencia.setString(2, grupos.getNombre());
+				Psentencia.setString(3, grupos.getCiclo());
+				Psentencia.setInt(4, grupos.getAula());
 
 				Psentencia.executeUpdate();
 			}

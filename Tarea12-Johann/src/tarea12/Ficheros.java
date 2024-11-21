@@ -45,9 +45,9 @@ public class Ficheros {
 				LocalDate nacimiento = fecha.toLocalDate();
 				String ciclo = resultado.getString(6);
 				String curso = resultado.getString(7);
-				String grupo = resultado.getString(8);
+				int grupo = resultado.getInt(8);
 
-				bw.write(String.format("%d, %s, %s, %s, %s, %s, %s, %s", nia, nombre, apellidos, genero, nacimiento,
+				bw.write(String.format("%d, %s, %s, %s, %s, %s, %s, %d, %n", nia, nombre, apellidos, genero, nacimiento,
 						ciclo, curso, grupo));
 				bw.newLine();
 			}
@@ -68,9 +68,9 @@ public class Ficheros {
 	}
 
 	public void guardarFicheroJSON() {
+		// TODO
 
 		JSONArray listaAlumnos = new JSONArray();
-		JSONObject Alumno = new JSONObject();
 
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -79,7 +79,7 @@ public class Ficheros {
 			Statement sentencia = conexion.createStatement();
 			sql = "select NIA, nombre, apellidos, genero, fechaNacimiento, ciclo, curso, grupo from alumno";
 			ResultSet resultado = sentencia.executeQuery(sql);
-			FileWriter fw = new FileWriter("alumnos.json");
+			FileWriter fw = new FileWriter("grupos.json");
 
 			while (resultado.next()) {
 				JSONObject alumno = new JSONObject();
@@ -90,13 +90,13 @@ public class Ficheros {
 				alumno.put("nacimiento", resultado.getString("fechaNacimiento"));
 				alumno.put("ciclo", resultado.getString("ciclo"));
 				alumno.put("curso", resultado.getString("curso"));
-				alumno.put("grupo", resultado.getString("grupo"));
+				alumno.put("grupo", resultado.getInt("grupo"));
 
 				listaAlumnos.add(alumno);
 			}
 
 			fw.write(listaAlumnos.toJSONString());
-			System.out.println("Fichero alumnos.json creado correctamente.");
+			System.out.println("Fichero grupos.json creado correctamente.");
 
 			fw.close();
 			resultado.close();
@@ -133,7 +133,7 @@ public class Ficheros {
 				String fechaNacimiento = alumnoData[4].trim();
 				String ciclo = alumnoData[5].trim();
 				String curso = alumnoData[6].trim();
-				String grupo = alumnoData[7].trim();
+				int grupo = Integer.parseInt(alumnoData[7]);
 
 				Psentencia.setInt(1, nia);
 				Psentencia.setString(2, nombre);
@@ -142,7 +142,7 @@ public class Ficheros {
 				Psentencia.setDate(5, Date.valueOf(fechaNacimiento));
 				Psentencia.setString(6, ciclo);
 				Psentencia.setString(7, curso);
-				Psentencia.setString(8, grupo);
+				Psentencia.setInt(8, grupo);
 
 				Psentencia.executeUpdate();
 			}
@@ -165,6 +165,7 @@ public class Ficheros {
 	}
 
 	public void leerFicheroJSON() {
+		// TODO
 
 		sql = "insert into alumno(NIA, nombre, apellidos, genero, fechaNacimiento, ciclo, curso, grupo) values(?,?,?,?,?,?,?,?)";
 		JSONParser parser = new JSONParser();
@@ -175,7 +176,7 @@ public class Ficheros {
 
 			PreparedStatement Psentencia = conexion.prepareStatement(sql);
 
-			FileReader fr = new FileReader("alumnos.json");
+			FileReader fr = new FileReader("grupos.json");
 			Object obj = parser.parse(fr);
 			JSONArray listaAlumnos = (JSONArray) obj;
 
@@ -189,7 +190,7 @@ public class Ficheros {
 				String nacimiento = (String) alumnoJson.get("nacimiento");
 				String ciclo = (String) alumnoJson.get("ciclo");
 				String curso = (String) alumnoJson.get("curso");
-				String grupo = (String) alumnoJson.get("grupo");
+				int grupo = ((Long) alumnoJson.get("grupo")).intValue();
 
 				Psentencia.setInt(1, NIA);
 				Psentencia.setString(2, nombre);
@@ -198,12 +199,12 @@ public class Ficheros {
 				Psentencia.setDate(5, Date.valueOf(nacimiento));
 				Psentencia.setString(6, ciclo);
 				Psentencia.setString(7, curso);
-				Psentencia.setString(8, grupo);
+				Psentencia.setInt(8, grupo);
 
 				Psentencia.executeUpdate();
 			}
 
-			System.out.println("Los alumnos se insertaron correctamente en la base de datos.");
+			System.out.println("Se inserto correctamente la informacion en la base de datos.");
 
 			Psentencia.close();
 			conexion.close();
