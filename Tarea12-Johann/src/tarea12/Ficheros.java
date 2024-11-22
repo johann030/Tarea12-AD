@@ -185,6 +185,8 @@ public class Ficheros {
 	}
 
 	public void leerFicheroJSON() {
+		
+		//TODO revisar esto
 
 		String sqlGrupos = "insert into grupos(cod_grupo, nombre, ciclo, aula) values(?,?,?,?)";
 		String sqlAlumnos = "insert into alumno(NIA, nombre, apellidos, genero, fechaNacimiento, ciclo, curso, id_grupo) values(?,?,?,?,?,?,?,?)";

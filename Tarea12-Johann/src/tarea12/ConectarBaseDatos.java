@@ -175,7 +175,7 @@ public class ConectarBaseDatos {
 				System.out.printf("%d, %s %n", resultado.getInt(1), resultado.getString(2));
 			}
 
-			System.out.println("Digame la grupo para eliminar a sus alumnos: ");
+			System.out.println("Digame el grupo para eliminar a sus alumnos: ");
 			int grupo = sc.nextInt();
 			sc.nextLine();
 
