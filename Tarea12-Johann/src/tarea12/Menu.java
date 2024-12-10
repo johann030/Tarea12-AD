@@ -3,12 +3,12 @@ package tarea12;
 import java.util.Scanner;
 
 public class Menu {
-	Scanner sc = new Scanner(System.in);
-	int num = 0;
-	ConectarBaseDatos abd = new ConectarBaseDatos();
-	Ficheros f = new Ficheros();
 
 	public void menu() {
+		Scanner sc = new Scanner(System.in);
+		int num = 0;
+		ConectarBaseDatos abd = new ConectarBaseDatos();
+		Ficheros f = new Ficheros();
 		do {
 			System.out.println("----------------------------------------------------------------");
 			System.out.println("1. Insertar nuevo alumno.");

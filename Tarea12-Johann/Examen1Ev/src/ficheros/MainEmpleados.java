@@ -1,4 +1,4 @@
-package ficheros;
+package src.ficheros;
 
 import java.io.FileOutputStream;
 import java.io.IOException;

@@ -1,16 +1,15 @@
-package sql;
+package src.sql;
 
 import java.time.LocalDate;
 import java.util.Scanner;
 
 public class PedirVuelo {
-
 	Vuelo vuelo[] = new Vuelo[1];
 	Scanner sc = new Scanner(System.in);
 
 	public Vuelo[] pedirVuelo() {
 		for (int i = 0; i < vuelo.length; i++) {
-			System.out.println("Introduzca el salario del empleado: ");
+			System.out.println("Introduzca el numero de vuelo: ");
 			int num_vuelo = sc.nextInt();
 			sc.nextLine();
 
@@ -32,9 +31,8 @@ public class PedirVuelo {
 			System.out.println("Introduzca el departamento al que pertenece el empleado: ");
 			String estado = sc.nextLine();
 
-			Vuelo vuelo = new Vuelo(num_vuelo, fecha_vuelo, origen, destino, paradas, estado);
+			vuelo[i] = new Vuelo(num_vuelo, fecha_vuelo, origen, destino, paradas, estado);
 		}
-
 		return vuelo;
 	}
 }

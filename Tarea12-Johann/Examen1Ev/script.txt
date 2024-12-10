@@ -1,0 +1,10 @@
+create database johannExamen06;
+use johannExamen06;
+create table vuelos(
+num_vuelo INTEGER PRIMARY KEY NOT NULL,
+fecha_vuelo varchar(60) NOT NULL,
+Aorigen varchar(60) NOT NULL,
+Adestino varchar(60) NOT NULL,
+num_paradas INTEGER NOT NULL,
+estado varchar(40) NOT NULL
+);

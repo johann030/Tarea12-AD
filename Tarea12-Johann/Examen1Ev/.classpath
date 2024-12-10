@@ -6,16 +6,15 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="C:/Users/usuario/git/Tarea12-AD/Tarea12-Johann/lib/json-simple-1.1.1 - copia.jar">
+	<classpathentry kind="lib" path="C:/Users/usuario/Desktop/ExamenJohann/ExamenJohann/lib/json-simple-1.1.1.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/usuario/git/Tarea12-AD/Tarea12-Johann/lib/mysql-connector-j-9.1.0.jar">
+	<classpathentry kind="lib" path="C:/Users/usuario/Desktop/ExamenJohann/ExamenJohann/lib/mysql-connector-j-9.0.0.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" path="Examen1Ev"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -1,4 +1,4 @@
-package sql;
+package src.sql;
 
 import java.time.LocalDate;
 

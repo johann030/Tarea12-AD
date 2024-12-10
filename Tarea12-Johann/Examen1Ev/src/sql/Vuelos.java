@@ -1,4 +1,4 @@
-package sql;
+package src.sql;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -14,11 +14,11 @@ public class Vuelos {
 	private String nombre = "johann";
 	private String contrasenia = "manager";
 	private String sql;
-	PedirVuelo PV = new PedirVuelo();
-	Vuelo vuelo[] = PV.pedirVuelo();
 	Scanner sc = new Scanner(System.in);
+	PedirVuelo PV = new PedirVuelo();
 
 	public void insertarVuelo() {
+		Vuelo vuelo[] = PV.pedirVuelo();
 		Connection conexion;
 		sql = "insert into vuelos(num_vuelo, fecha_vuelo, Aorigen, Adestino, num_paradas, estado) values (?,?,?,?,?,?)";
 		try {
@@ -151,6 +151,7 @@ public class Vuelos {
 	}
 
 	public void cambiarEstado() {
+		Vuelo vuelo[] = PV.pedirVuelo();
 		Connection conexion;
 		sql = "update vuelos set estado = ?";
 		try {
