@@ -1,4 +1,4 @@
-1001, Juan, Pérez, Masculino, 2005-05-10, Informática, 1, 121, 
+1001, pedro, Pérez, Masculino, 2005-05-10, Informática, 1, 121, 
 
 1002, Ana, Gómez, Femenino, 2006-08-15, Informática, 1, 121, 
 
@@ -12,5 +12,5 @@
 
 1007, Pedro, Sánchez, Masculino, 2005-09-09, Mecánica, 2, 121, 
 
-1008, Laura, Díaz, Femenino, 2006-11-23, Mecánica, 2, 121, 
+1244, johann, conforme, hombre, 2001-03-19, dam, 2, 121, 
 
