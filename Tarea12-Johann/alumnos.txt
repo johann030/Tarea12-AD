@@ -1,0 +1,16 @@
+1001, Juan, Pérez, Masculino, 2005-05-10, Informática, 1, 121, 
+
+1002, Ana, Gómez, Femenino, 2006-08-15, Informática, 1, 121, 
+
+1003, Carlos, López, Masculino, 2005-12-22, Electrónica, 2, 121, 
+
+1004, María, Martínez, Femenino, 2006-01-18, Electrónica, 2, 121, 
+
+1005, Luis, García, Masculino, 2005-07-02, Administración, 1, 121, 
+
+1006, Claudia, Hernández, Femenino, 2006-03-11, Administración, 1, 121, 
+
+1007, Pedro, Sánchez, Masculino, 2005-09-09, Mecánica, 2, 121, 
+
+1008, Laura, Díaz, Femenino, 2006-11-23, Mecánica, 2, 121, 
+
