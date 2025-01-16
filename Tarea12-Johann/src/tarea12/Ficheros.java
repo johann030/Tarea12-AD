@@ -32,7 +32,7 @@ public class Ficheros {
 
 			Connection conexion = DriverManager.getConnection(url, usuario, contrasenia);
 			Statement sentencia = conexion.createStatement();
-			sql = "select NIA, nombre, apellidos, genero, fechaNacimiento, ciclo, curso, id_grupo from alumno";
+			sql = "select NIA, nombre, apellidos, genero, fecha_nacimiento, ciclo, curso, id_grupo from alumnos";
 			ResultSet resultado = sentencia.executeQuery(sql);
 			BufferedWriter bw = new BufferedWriter(new FileWriter("alumnos.txt"));
 
@@ -135,7 +135,7 @@ public class Ficheros {
 
 	public void leerFicheroTexto() {
 
-		sql = "insert into alumno(NIA, nombre, apellidos, genero, fechaNacimiento, ciclo, curso, id_grupo) values(?,?,?,?,?,?,?,?)";
+		sql = "insert into alumnos(NIA, nombre, apellidos, genero, fecha_nacimiento, ciclo, curso, id_grupo) values(?,?,?,?,?,?,?,?)";
 
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
